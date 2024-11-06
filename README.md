@@ -8,8 +8,11 @@ An online learning platform that offers a wide range of courses across various s
 
 ### Features
 🪪 - Authentication (Sign in with Ethereum, Sign in with Substrate, Google, Email)
+
 💵 - Payment (Course purchase via Fiat, Crypto)
+
 💸 - Coupon
+
 📖 - Course Features
         - Announcements
         - Video
@@ -20,7 +23,9 @@ An online learning platform that offers a wide range of courses across various s
         - Link
         - Resources
         - Chat room
+
 👨‍👨‍👦 - Users (Instructor, Student)
+
 ✒️  - Others
         - Invoice Creation via Smart contract
         - Invoice Payment via Smart contract
