@@ -36,9 +36,7 @@ class CourseConsumer(AsyncJsonWebsocketConsumer):
         user = self.scope.get("user")
         if not user or user.is_anonymous:
             self.close()
-        self.course = await database_sync_to_async(self.is_course_participant)(
-            user
-        )
+        self.course = await database_sync_to_async(self.is_course_participant)(user)
         self.user = user
         self.course_name = get_course_channel_name(self.course_id)
         await self.channel_layer.group_add(self.course_name, self.channel_name)
@@ -49,7 +47,5 @@ class CourseConsumer(AsyncJsonWebsocketConsumer):
         await self.send_json(event["data"])
 
     async def disconnect(self, close_code):
-        await self.channel_layer.group_discard(
-            self.course_name, self.channel_name
-        )
+        await self.channel_layer.group_discard(self.course_name, self.channel_name)
         self.close(close_code)

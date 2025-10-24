@@ -26,9 +26,7 @@ urlpatterns = [
     ),
     path("cart/", views.CartAPIView.as_view(), name="cart"),
     path("cart/add/", views.CartAddAPIView.as_view(), name="cart_add"),
-    path(
-        "cart/remove/", views.CartRemoveAPIView.as_view(), name="cart_remove"
-    ),
+    path("cart/remove/", views.CartRemoveAPIView.as_view(), name="cart_remove"),
     path("cart/clear/", views.CartClearAPIView.as_view(), name="cart_clear"),
     path(
         "create-order/",
@@ -39,5 +37,25 @@ urlpatterns = [
         "verify-transaction/",
         views.VerifyTransactionAPIView.as_view(),
         name="verify_transaction",
+    ),
+    path(
+        "notifications/",
+        views.NotificationListAPIView.as_view(),
+        name="notifications",
+    ),
+    path(
+        "notifications/<uuid:id>/mark-read/",
+        views.NotificationMarkAsReadAPIView.as_view(),
+        name="mark_notification_read",
+    ),
+    path(
+        "notifications/mark-all-as-read/",
+        views.NotificationMarkAllAsReadAPIView.as_view(),
+        name="notification_mark_all_as_read",
+    ),
+    path(
+        "notifications/<uuid:id>/delete/",
+        views.NotificationDeleteAPIView.as_view(),
+        name="notification_delete",
     ),
 ]

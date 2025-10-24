@@ -5,8 +5,10 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from core.models import course as course_models
+from core.models import notification as notification_models
 from core.serializers import course as course_serializer
 from core.serializers import sales as sales_serializer
+from core.serializers import notification as notification_serializer
 from core.service import CoreService
 
 
@@ -52,9 +54,7 @@ class CourseModulesListAPIView(generics.ListAPIView):
     def get_queryset(self):
         course_id = self.kwargs["id"]
         course = generics.get_object_or_404(course_models.Course, id=course_id)
-        return course_models.Module.objects.filter(course=course).order_by(
-            "order"
-        )
+        return course_models.Module.objects.filter(course=course).order_by("order")
 
 
 class ModuleContentsListAPIView(generics.ListAPIView):
@@ -67,9 +67,7 @@ class ModuleContentsListAPIView(generics.ListAPIView):
     def get_queryset(self):
         module_id = self.kwargs["id"]
         module = generics.get_object_or_404(course_models.Module, id=module_id)
-        return course_models.Content.objects.filter(module=module).order_by(
-            "order"
-        )
+        return course_models.Content.objects.filter(module=module).order_by("order")
 
 
 class CartAPIView(generics.GenericAPIView):
@@ -127,9 +125,7 @@ class ApplyCouponAPIView(generics.GenericAPIView):
 
     def post(self, request):
         user = request.user
-        serializer = self.serializer_class(
-            data=request.data, context={"user": user}
-        )
+        serializer = self.serializer_class(data=request.data, context={"user": user})
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(status=status.HTTP_204_NO_CONTENT)
@@ -158,4 +154,50 @@ class VerifyTransactionAPIView(generics.GenericAPIView):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class NotificationListAPIView(generics.ListAPIView):
+    permission_classes = IsAuthenticated
+    serializer_class = notification_serializer.NotificationSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+        return user.notifications.all().order_by("-created_at")
+
+
+class NotificationMarkAsReadAPIView(generics.GenericAPIView):
+    permission_classes = IsAuthenticated
+    serializer_class = notification_serializer.NotificationSerializer
+
+    def post(self, request, id):
+        user = request.user
+        notification = generics.get_object_or_404(
+            notification_models.Notification, id=id, user=user
+        )
+        notification.is_read = True
+        notification.save()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class NotificationMarkAllAsReadAPIView(generics.GenericAPIView):
+    permission_classes = IsAuthenticated
+
+    def post(self, request):
+        user = request.user
+        notification_models.Notification.objects.filter(
+            is_read=False, user=user
+        ).update(is_read=True)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class NotificationDeleteAPIView(generics.GenericAPIView):
+    permission_classes = IsAuthenticated
+
+    def delete(self, request, id):
+        user = request.user
+        notification = generics.get_object_or_404(
+            notification_models.Notification, id=id, user=user
+        )
+        notification.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)

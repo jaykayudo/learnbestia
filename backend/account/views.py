@@ -134,9 +134,7 @@ class CourseContentNoteListCreateAPIView(
         return AccountService.get_content(self.kwargs, self.course)
 
     def get_queryset(self):
-        return AccountService.get_content_notes(
-            self.request.user, self.get_object()
-        )
+        return AccountService.get_content_notes(self.request.user, self.get_object())
 
 
 class CourseChatMessagesListAPIView(

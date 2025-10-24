@@ -57,9 +57,7 @@ class Course(BaseModel):
     description = models.TextField(_("Course Description"))
     price = models.DecimalField(_("Price"), max_digits=15, decimal_places=2)
     is_available = models.BooleanField(default=False)
-    thumbnail = models.ImageField(
-        upload_to="course_thumbnail", blank=True, null=True
-    )
+    thumbnail = models.ImageField(upload_to="course_thumbnail", blank=True, null=True)
     category = models.ManyToManyField(CourseCategory, blank=True)
     co_instructors = models.ManyToManyField(
         Instructor, related_name="co_courses", blank=True
@@ -138,9 +136,7 @@ class CourseStudent(BaseModel):
 
 
 class Module(BaseModel):
-    course = models.ForeignKey(
-        Course, related_name="modules", on_delete=models.CASCADE
-    )
+    course = models.ForeignKey(Course, related_name="modules", on_delete=models.CASCADE)
     title = models.CharField(_("Module Title"), max_length=300)
     order = OrderField(for_fields=["course"], verbose_name=_("Order"))
     description = models.TextField(blank=True)
@@ -252,9 +248,7 @@ class ContentNote(BaseModel):
 
 
 class CourseAnnouncement(BaseModel):
-    poster = models.ForeignKey(
-        Instructor, null=True, on_delete=models.SET_NULL
-    )
+    poster = models.ForeignKey(Instructor, null=True, on_delete=models.SET_NULL)
     subject = models.CharField(max_length=200)
     message = models.TextField()
 
@@ -264,9 +258,7 @@ class CourseAnnouncement(BaseModel):
 
 class CourseAnnouncementComment(BaseModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    announcement = models.ForeignKey(
-        CourseAnnouncement, on_delete=models.CASCADE
-    )
+    announcement = models.ForeignKey(CourseAnnouncement, on_delete=models.CASCADE)
     message = models.TextField()
 
     def __str__(self) -> str:

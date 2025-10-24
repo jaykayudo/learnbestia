@@ -47,9 +47,7 @@ class GoogleLoginSerializer(serializers.Serializer):
             is_active=True,
         )
         if not users.exists():
-            raise AuthenticationFailed(
-                {"details": "Account not registered with us"}
-            )
+            raise AuthenticationFailed({"details": "Account not registered with us"})
 
         self.context["user"] = users.first()
         return attrs
@@ -76,9 +74,7 @@ class EthereumLoginSerializer(serializers.Serializer):
             wallet_id=address, provider=User.PROVIDERS.ETHEREUM, is_active=True
         )
         if not users.exists():
-            raise AuthenticationFailed(
-                {"details": "Account not registered with us"}
-            )
+            raise AuthenticationFailed({"details": "Account not registered with us"})
 
         self.context["user"] = users.first()
         return attrs
@@ -105,9 +101,7 @@ class PolkadotLoginSerializer(serializers.Serializer):
             wallet_id=address, provider=User.PROVIDERS.POLKADOT, is_active=True
         )
         if not users.exists():
-            raise AuthenticationFailed(
-                {"details": "Account not registered with us"}
-            )
+            raise AuthenticationFailed({"details": "Account not registered with us"})
 
         self.context["user"] = users.first()
         return attrs

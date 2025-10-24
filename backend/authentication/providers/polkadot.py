@@ -10,9 +10,7 @@ class Polkadot:
         siws = SiwsMessage(message=message)
         domain = request.get_host()
         try:
-            siws.verify(
-                signature=signature, public_key=siws.address, domain=domain
-            )
+            siws.verify(signature=signature, public_key=siws.address, domain=domain)
         except Exception as err:
             raise AuthenticationFailed({"detail": str(err)})
         return siws.address

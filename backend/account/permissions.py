@@ -12,9 +12,7 @@ class IsActiveUser(BasePermission):
 
 class IsCourseStudent(BasePermission):
     def has_object_permission(self, request, view, obj):
-        if not (
-            is_active_user := IsActiveUser().has_permission(request, view)
-        ):
+        if not (is_active_user := IsActiveUser().has_permission(request, view)):
             return is_active_user
         user = request.user
         flag = obj.students.filter(user=user).exists()

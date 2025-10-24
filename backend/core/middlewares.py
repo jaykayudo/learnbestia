@@ -21,7 +21,7 @@ def get_user_from_token(_token):
 
 class TokenGetMiddleware:
     """
-    Middleware for websocket connection authentication 
+    Middleware for websocket connection authentication
     using restframework token authentication
     """
 
