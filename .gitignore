@@ -1,0 +1,135 @@
+# .gitignore for a combined Python + Solidity + React project
+
+# ---------- OS ----------
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ---------- Editors / IDEs ----------
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+*.swp
+*~.nib
+*.iml
+
+# ---------- Python ----------
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+.Python
+
+# Packaging
+build/
+dist/
+*.egg-info/
+pip-wheel-metadata/
+
+# Test / coverage / caches
+.coverage
+.coverage.*
+.cache
+.pytest_cache/
+htmlcov/
+nosetests.xml
+coverage.xml
+
+# Type checkers / linters
+.mypy_cache/
+.dmypy.json
+.pyre/
+
+# Python env files
+.env
+.env.*
+
+# ---------- Node / React ----------
+# dependencies
+node_modules/
+
+# production build
+build/
+dist/
+.out/
+.next/
+.cache/
+.parcel-cache/
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# local envs for React/Node
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# coverage
+coverage/
+
+# misc
+public/static/
+*.map
+
+# ---------- Solidity / Blockchain dev ----------
+# Hardhat / Truffle / Foundry / Brownie artifacts & caches
+artifacts/
+cache/
+cache.json
+build-info/
+typechain/
+out/
+lib/
+deployed_contracts.json
+
+# Truffle
+build/
+contracts/build/
+
+# Brownie
+brownie_debug.log
+reports/
+
+# Foundry
+out/
+node_modules/
+
+# Secrets / keystore / wallets
+*.keystore
+*.secret
+*.pem
+*.p12
+secrets.json
+
+# Hardhat local node
+hh-local-*
+
+# ---------- Misc / project files ----------
+# dotenv + secrets (already covered but ensure)
+*.env
+.env.*
+
+# lockfiles should be tracked; do not ignore package-lock.json / yarn.lock / pnpm-lock.yaml
+
+# Editor backups / misc
+*.log
+*.bak
+*.tmp
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+ehthumbs.db

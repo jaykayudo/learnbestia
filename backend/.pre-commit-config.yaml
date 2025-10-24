@@ -1,0 +1,20 @@
+repos:
+-   repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+    - id: detect-private-key
+      exclude_from_files: .gitignore
+-   repo: https://github.com/CoinAlpha/git-hooks
+    rev: 78f0683233a09c68a072fd52740d32c0376d4f0f
+    hooks:
+    -   id: detect-wallet-private-key
+        types: [file]
+        exclude: .json
+        exclude_from_files: .gitignore
+-   repo: https://github.com/psf/black
+    rev: 23.3.0
+    hooks:
+    -   id: black
+        files: "\\.(py)$"
+        args: [--check]
+        exclude_from_files: .gitignore
