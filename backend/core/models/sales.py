@@ -62,9 +62,7 @@ class Coupon(BaseModel):
 
 class Cart(BaseModel):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    coupon = models.ForeignKey(
-        Coupon, null=True, blank=True, on_delete=models.SET_NULL
-    )
+    coupon = models.ForeignKey(Coupon, null=True, blank=True, on_delete=models.SET_NULL)
 
     @property
     def total_price(self):
@@ -108,12 +106,8 @@ class CartItem(BaseModel):
 class Order(BaseModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     ref = models.CharField(max_length=20, editable=False, unique=True)
-    coupon = models.ForeignKey(
-        Coupon, null=True, blank=True, on_delete=models.SET_NULL
-    )
-    status = models.IntegerField(
-        choices=OrderStatus.choices, default=OrderStatus.NEW
-    )
+    coupon = models.ForeignKey(Coupon, null=True, blank=True, on_delete=models.SET_NULL)
+    status = models.IntegerField(choices=OrderStatus.choices, default=OrderStatus.NEW)
 
     @property
     def total_price(self):

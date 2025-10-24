@@ -79,9 +79,7 @@ class BaseManager(UserManager):
         return self._create_user(email, password, **extra_fields)
 
     def create_superuser(self, email, password, **extra_fields):
-        extra_fields.setdefault(
-            "first_name", "Admin " + str(secrets.token_urlsafe(8))
-        )
+        extra_fields.setdefault("first_name", "Admin " + str(secrets.token_urlsafe(8)))
         extra_fields.setdefault("is_staff", True)
         extra_fields.setdefault("is_superuser", True)
 
@@ -97,9 +95,7 @@ class User(BaseModel, AbstractUser):
     PROVIDERS = AuthProviders
 
     username = None
-    wallet_id = models.TextField(
-        _("Wallet Id"), blank=True, null=True, unique=True
-    )
+    wallet_id = models.TextField(_("Wallet Id"), blank=True, null=True, unique=True)
     email = models.EmailField(
         _("Email"), max_length=150, unique=True, blank=True, null=True
     )
@@ -123,8 +119,7 @@ class User(BaseModel, AbstractUser):
     class Meta:
         constraints = [
             models.CheckConstraint(
-                check=models.Q(wallet_id__isnull=False)
-                | models.Q(email_isnull=False),
+                check=models.Q(wallet_id__isnull=False) | models.Q(email_isnull=False),
                 name="address_or_email_not_null",
             )
         ]
@@ -154,9 +149,7 @@ class OTPManager(models.Manager):
 class OTPToken(BaseModel):
     OTP_REASONS = OTPReasons
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    reason = models.CharField(
-        _("Reason"), choices=OTPReasons.choices, max_length=20
-    )
+    reason = models.CharField(_("Reason"), choices=OTPReasons.choices, max_length=20)
     code = models.TextField(_("Code"))
     objects = OTPManager()
 
@@ -237,9 +230,7 @@ class Transaction(BaseModel):
         default=TransactionStatus.INITAILIZED,
         choices=TransactionStatus.choices,
     )
-    payment_method = models.CharField(
-        max_length=20, choices=PaymentMethods.choices
-    )
+    payment_method = models.CharField(max_length=20, choices=PaymentMethods.choices)
     reason = models.CharField(max_length=20, choices=TransactionReason.choices)
     date_verified = models.DateTimeField(blank=True, null=True)
 

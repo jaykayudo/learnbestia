@@ -52,9 +52,7 @@ class CourseModulesListAPIView(generics.ListAPIView):
     def get_queryset(self):
         course_id = self.kwargs["id"]
         course = generics.get_object_or_404(course_models.Course, id=course_id)
-        return course_models.Module.objects.filter(course=course).order_by(
-            "order"
-        )
+        return course_models.Module.objects.filter(course=course).order_by("order")
 
 
 class ModuleContentsListAPIView(generics.ListAPIView):
@@ -67,9 +65,7 @@ class ModuleContentsListAPIView(generics.ListAPIView):
     def get_queryset(self):
         module_id = self.kwargs["id"]
         module = generics.get_object_or_404(course_models.Module, id=module_id)
-        return course_models.Content.objects.filter(module=module).order_by(
-            "order"
-        )
+        return course_models.Content.objects.filter(module=module).order_by("order")
 
 
 class CartAPIView(generics.GenericAPIView):
@@ -127,9 +123,7 @@ class ApplyCouponAPIView(generics.GenericAPIView):
 
     def post(self, request):
         user = request.user
-        serializer = self.serializer_class(
-            data=request.data, context={"user": user}
-        )
+        serializer = self.serializer_class(data=request.data, context={"user": user})
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(status=status.HTTP_204_NO_CONTENT)

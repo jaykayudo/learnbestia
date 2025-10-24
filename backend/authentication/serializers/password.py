@@ -45,13 +45,9 @@ class ForgotPasswordSerializer(serializers.Serializer):
 
     def validate(self, attrs):
         email = attrs["email"]
-        users = User.objects.filter(
-            email=email, auth_provider=User.PROVIDERS.EMAIL
-        )
+        users = User.objects.filter(email=email, auth_provider=User.PROVIDERS.EMAIL)
         if not users.exists():
-            raise serializers.ValidationError(
-                {"detail": "Account not Found"}, code=404
-            )
+            raise serializers.ValidationError({"detail": "Account not Found"}, code=404)
         self.context["user"] = users.first()
         return attrs
 
@@ -74,9 +70,7 @@ class ResetPasswordSerializer(serializers.Serializer):
             is_active=True,
         )
         if not users.exists():
-            raise serializers.ValidationError(
-                {"detail": "Account not Found"}, code=404
-            )
+            raise serializers.ValidationError({"detail": "Account not Found"}, code=404)
         user = users.first()
         otps = OTPToken.objects.filter(user=user).order_by("-created_at")
         if not otps.exists():

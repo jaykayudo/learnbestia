@@ -26,9 +26,7 @@ urlpatterns = [
     ),
     path("cart/", views.CartAPIView.as_view(), name="cart"),
     path("cart/add/", views.CartAddAPIView.as_view(), name="cart_add"),
-    path(
-        "cart/remove/", views.CartRemoveAPIView.as_view(), name="cart_remove"
-    ),
+    path("cart/remove/", views.CartRemoveAPIView.as_view(), name="cart_remove"),
     path("cart/clear/", views.CartClearAPIView.as_view(), name="cart_clear"),
     path(
         "create-order/",

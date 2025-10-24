@@ -18,9 +18,9 @@ class CoreService:
 
     @classmethod
     def get_course_reviews(cls, course: course_models.Course):
-        reviews = course_models.CourseReview.objects.filter(
-            course=course
-        ).order_by("-created_at")
+        reviews = course_models.CourseReview.objects.filter(course=course).order_by(
+            "-created_at"
+        )
         return reviews
 
     @classmethod
@@ -55,15 +55,11 @@ class CoreService:
     @classmethod
     def add_to_cart(cls, user: user_models.User, course: course_models.Course):
         cart: sales_models.Cart = cls.get_user_cart(user)
-        item, _ = sales_models.CartItem.objects.get_or_create(
-            cart=cart, course=course
-        )
+        item, _ = sales_models.CartItem.objects.get_or_create(cart=cart, course=course)
         return item
 
     @classmethod
-    def remove_from_cart(
-        cls, user: user_models.User, course: sales_models.Course
-    ):
+    def remove_from_cart(cls, user: user_models.User, course: sales_models.Course):
         cart: sales_models.Cart = cls.get_user_cart(user)
         sales_models.CartItem.objects.filter(cart=cart, course=course).delete()
 
@@ -77,9 +73,7 @@ class CoreService:
         if cart.is_empty:
             raise exceptions.CartIsEmpty
 
-        order = sales_models.Order.objects.create(
-            user=user, coupon=cart.coupon
-        )
+        order = sales_models.Order.objects.create(user=user, coupon=cart.coupon)
         order.create_order()
         order_ct = ContentType.objects.get_for_model(sales_models.Order)
         tx = user_models.Transaction.objects.create(

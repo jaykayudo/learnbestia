@@ -30,9 +30,7 @@ urlpatterns = [
         views.GoogleLoginAPIView.as_view(),
         name="google-login",
     ),
-    path(
-        "login/email/", views.EmailLoginAPIView.as_view(), name="email-login"
-    ),
+    path("login/email/", views.EmailLoginAPIView.as_view(), name="email-login"),
     path(
         "login/ethereum/",
         views.EthereumLoginAPIView.as_view(),

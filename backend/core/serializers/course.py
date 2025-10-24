@@ -49,16 +49,14 @@ class CourseSerializer(serializers.ModelSerializer):
         return obj.students.count()
 
     def get_objectives(self, obj: course.Course):
-        objectives = course.CourseObjective.objects.filter(
-            course=obj
-        ).order_by("order")
+        objectives = course.CourseObjective.objects.filter(course=obj).order_by("order")
         data = CourseObjectiveSerializer(objectives, many=True).data
         return data
 
     def get_requirements(self, obj: course.Course):
-        requirements = course.CourseRequirement.objects.filter(
-            course=obj
-        ).order_by("order")
+        requirements = course.CourseRequirement.objects.filter(course=obj).order_by(
+            "order"
+        )
         data = CourseRequirementSerializer(requirements, many=True).data
         return data
 

@@ -28,8 +28,10 @@ class AuthService:
             user = users.first()
             raise serializers.ValidationError(
                 {
-                    "detail": ("User with similar email already"
-                               "exist for {user.auth_provider} provider")
+                    "detail": (
+                        "User with similar email already"
+                        "exist for {user.auth_provider} provider"
+                    )
                 }
             )
         user = models.User()
@@ -51,8 +53,10 @@ class AuthService:
             user = users.first()
             raise serializers.ValidationError(
                 {
-                    "detail": ("User with wallet id already exist"
-                               f" for {user.auth_provider} provider")
+                    "detail": (
+                        "User with wallet id already exist"
+                        f" for {user.auth_provider} provider"
+                    )
                 }
             )
         user = models.User()

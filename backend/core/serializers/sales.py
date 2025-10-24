@@ -42,9 +42,7 @@ class AddToCartSerializer(serializers.Serializer):
     course = serializers.UUIDField()
 
     def validate(self, attrs):
-        course = generics.get_object_or_404(
-            course_models.Course, id=attrs["course"]
-        )
+        course = generics.get_object_or_404(course_models.Course, id=attrs["course"])
         self.context["course"] = course
         return attrs
 
@@ -58,9 +56,7 @@ class RemoveFromCartSerializer(serializers.Serializer):
     course = serializers.UUIDField()
 
     def validate(self, attrs):
-        course = generics.get_object_or_404(
-            course_models.Course, id=attrs["course"]
-        )
+        course = generics.get_object_or_404(course_models.Course, id=attrs["course"])
         self.context["course"] = course
         return attrs
 
@@ -123,9 +119,7 @@ class VerifyTransactionSerializer(serializers.Serializer):
 
     def validate(self, attrs):
         try:
-            transaction = user_models.Transaction.objects.get(
-                ref=attrs["transaction"]
-            )
+            transaction = user_models.Transaction.objects.get(ref=attrs["transaction"])
         except user_models.Transaction.DoesNotExist:
             raise exceptions.InvalidTransaction
         if transaction.status != transaction.STATUSES.INITAILIZED:

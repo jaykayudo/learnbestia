@@ -17,12 +17,12 @@ class CorePagination(pagination.PageNumberPagination):
     def get_paginated_response(self, data):
         return Response(
             {
-                "next": self.page.next_page_number()
-                if self.page.has_next()
-                else None,
-                "previous": self.page.previous_page_number()
-                if self.page.has_previous()
-                else None,
+                "next": self.page.next_page_number() if self.page.has_next() else None,
+                "previous": (
+                    self.page.previous_page_number()
+                    if self.page.has_previous()
+                    else None
+                ),
                 "count": self.page.paginator.count,
                 "data": data,
             }
@@ -94,9 +94,7 @@ def cleanup_temp_media_files():
         file_split_list = file.split("_")
         if len(file_split_list) == 3:
             date_string = file_split_list[1]
-            date_time = timezone.datetime.strptime(
-                date_string, "%Y-%m-%d-%H-%M-%S"
-            )
+            date_time = timezone.datetime.strptime(date_string, "%Y-%m-%d-%H-%M-%S")
             if date_time + timezone.timedelta(hours=1) < timezone.now():
                 default_storage.delete(temp_path / file)
                 deleted += 1
@@ -110,9 +108,7 @@ def move_course_file(instance, file_path, type="video"):
         raise TypeError(f"Invalid Type - {type}")
     ext = file_path.split(".")[-1]
     if ext not in FILE_EXTENSIONS[type]:
-        raise TypeError(
-            "Invalid extension for file extension for type %s" % type
-        )
+        raise TypeError("Invalid extension for file extension for type %s" % type)
     file = default_storage.open(file_path)
 
     new_file_name = f"{slugify(instance.title)}-{instance.id}.{ext}"
