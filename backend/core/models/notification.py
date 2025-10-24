@@ -22,7 +22,7 @@ class NotificationType(models.TextChoices):
 class Notification(BaseModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
-    description = models.TextField()
+    description = models.TextField(blank=True, null=True)
     object_id = models.UUIDField()
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     related_content = GenericForeignKey("content_type", "object_id")
