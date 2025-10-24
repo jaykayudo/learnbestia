@@ -157,7 +157,7 @@ class VerifyTransactionAPIView(generics.GenericAPIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class NoticationListAPIView(generics.ListAPIView):
+class NotificationListAPIView(generics.ListAPIView):
     permission_classes = IsAuthenticated
     serializer_class = notification_serializer.NotificationSerializer
 
@@ -180,7 +180,7 @@ class NotificationMarkAsReadAPIView(generics.GenericAPIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class NoticationMarkAllAsReadAPIView(generics.GenericAPIView):
+class NotificationMarkAllAsReadAPIView(generics.GenericAPIView):
     permission_classes = IsAuthenticated
 
     def post(self, request):

@@ -38,4 +38,19 @@ urlpatterns = [
         views.VerifyTransactionAPIView.as_view(),
         name="verify_transaction",
     ),
+    path(
+        "notifications/",
+        views.NotificationListAPIView.as_view(),
+        name="notifications",
+    ),
+    path(
+        "notifications/<uuid:id>/mark-read/",
+        views.NotificationMarkAsReadAPIView.as_view(),
+        name="mark_notification_read",
+    ),
+    path(
+        "notifications/mark-all-as-read/",
+        views.NotificationMarkAllAsReadAPIView.as_view(),
+        name="mark_notification_read",
+    ),
 ]
