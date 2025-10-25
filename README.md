@@ -30,3 +30,4 @@ An online learning platform that offers a wide range of courses across various s
         - Invoice Creation via Smart contract
         - Invoice Payment via Smart contract
         - Payment via learnbestia coin or stablecoin
+        - NFT certificate for course completion
