@@ -1,0 +1,27 @@
+FROM python:3.12-slim-bullseye
+
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
+RUN apt-get update && apt-get install -y \
+    libgirepository1.0-dev \
+    gcc \
+    libcairo2-dev \
+    pkg-config \
+    python3-dev \
+    gir1.2-gtk-3.0 \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /home/learnbestia_backend/src
+
+COPY ../requirements.txt .
+
+RUN pip install --no-cache-dir -r requirements.txt
+
+RUN rm requirements.txt
+
+COPY backend .
+
+RUN python manage.py migrate
+
+CMD ["python","manage.py","runserver","0.0.0.0:8000"]

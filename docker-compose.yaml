@@ -1,0 +1,64 @@
+services:
+  db:
+    container_name: learnbestia_db
+    image: postgres:14
+    volumes:
+      - learnbestia-db-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    env_file:
+      - ./backend/.env
+
+  backend:
+    container_name: learnbestia_backend
+    build:
+      context: ./
+      dockerfile: ./backend/dockerfile
+    volumes:
+      - ./backend:/home/learnbestia_backend/src
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./backend/db.sqlite3:/home/learnbestia_backend/src/db.sqlite3
+    networks:
+      - learnbestia_network
+    ports:
+      - "8000:8000"
+
+  frontend:
+    container_name: learnbestia_frontend
+    build:
+      context: ./
+      dockerfile: ./frontend/dockerfile
+    volumes:
+      - ./frontend:/home/learnbestia_frontend/src
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - learnbestia_network
+    ports:
+      - "3000:3000"
+    
+  contract:
+    container_name: learnbestia_contract
+    build:
+      context: ./
+      dockerfile: ./contract/dockerfile
+    volumes:
+      - ./contract:/home/learnbestia_contract/src
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - learnbestia_network
+
+volumes:
+  learnbestia-db-data:
+
+networks:
+  learnbestia_network:
+    driver: bridge
