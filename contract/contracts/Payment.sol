@@ -76,9 +76,17 @@ contract Payment is AccessControl{
     function grantRole(bytes32 role, address account) public override onlyRole(ADMIN_ROLE) {
         _grantRole(role, account);
     }
+    
+    function withdrawFunds(address recipient, address token, uint256 amount) public onlyRole(ADMIN_ROLE) {
+        IERC20 tokenInterface = IERC20(token);
+        require(tokenInterface.balanceOf(address(this)) >= amount, "Insufficient balance");
+        tokenInterface.transfer(recipient, amount);
+    }
 
     function getInvoice(string memory ref) public view returns (Transaction memory) {
         return transactions[ref];
     }
+
+    
 
 }
