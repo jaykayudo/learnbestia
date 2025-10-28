@@ -27,8 +27,14 @@ contract Payment is AccessControl{
         uint256 date_updated;
     }
 
-    // 
+    // mapping of ref to transaction
     mapping(string => Transaction) public transactions;
+
+    // Events
+    event InvoiceCreated(string indexed ref, uint256 amount, address indexed token, address admin);
+    event InvoicePaid(string indexed ref, address payer);
+    event InvoiceCancelled(string ref);
+    event FundsWithdrawn(address recipient, address token, uint256 amount, address admin);
 
     constructor(address admin) {
         _grantRole(ADMIN_ROLE, admin);
@@ -38,6 +44,7 @@ contract Payment is AccessControl{
         Status initial_status = Status.INITIATED;
         Transaction memory transaction = Transaction(ref, amount, token, initial_status, block.timestamp, block.timestamp);
         transactions[ref] = transaction;
+        emit InvoiceCreated(ref, amount, token, msg.sender);
     }
 
     function payInvoice(string memory ref) public payable {
@@ -57,6 +64,7 @@ contract Payment is AccessControl{
         transaction.status = Status.PAID;
         transaction.date_updated = block.timestamp;
         transactions[ref] = transaction;
+        emit InvoicePaid(ref, caller);
     }
 
     function checkPaymentStatus(string memory ref) public view returns (bool) {
@@ -71,22 +79,22 @@ contract Payment is AccessControl{
         transaction.status = Status.CANCELLED;
         transaction.date_updated = block.timestamp;
         transactions[ref] = transaction;
+        emit InvoiceCancelled(ref);
     }
 
     function grantRole(bytes32 role, address account) public override onlyRole(ADMIN_ROLE) {
         _grantRole(role, account);
     }
-    
+
     function withdrawFunds(address recipient, address token, uint256 amount) public onlyRole(ADMIN_ROLE) {
         IERC20 tokenInterface = IERC20(token);
         require(tokenInterface.balanceOf(address(this)) >= amount, "Insufficient balance");
         tokenInterface.transfer(recipient, amount);
+        emit FundsWithdrawn(recipient, token, amount, msg.sender);
     }
 
     function getInvoice(string memory ref) public view returns (Transaction memory) {
         return transactions[ref];
     }
-
-    
 
 }
