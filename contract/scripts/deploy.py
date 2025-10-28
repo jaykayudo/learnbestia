@@ -1,0 +1,45 @@
+from brownie import Payment, Certificate, Learnbestia
+from scripts.helpers import get_account
+
+# ANSI color codes
+GREEN = "\033[92m"
+YELLOW = "\033[93m"
+BLUE = "\033[94m"
+RESET = "\033[0m"
+
+
+def deploy():
+    """
+    Steps for Deployment:
+    - get account
+    - deploy payment contract
+    - deploy certificate
+    """
+    account = get_account()
+    print("Deploying Payment contract")
+    payment_contract = Payment.deploy(account.address, {"from": account})
+    print(f"{GREEN}Deployed Payment contract at {payment_contract.address}{RESET}")
+
+    print("Deploying Certificate Contract")
+    certificate_contract = Certificate.deploy(
+        account.address, "CERT", "CERT007", {"from": account}
+    )
+    print(
+        f"{GREEN}Deployed Certificate Contract at {certificate_contract.address}{RESET}"
+    )
+
+    print("Deploying Learnbestia Token Contract")
+    learnbestia_token_contract = Learnbestia.deploy({"from": account})
+    print(
+        f"{GREEN}Deployed Learnbestia Token Contract at {learnbestia_token_contract.address}{RESET}"
+    )
+
+    return {
+        "certificate": certificate_contract,
+        "learnbestia": learnbestia_token_contract,
+        "payment": payment_contract,
+    }
+
+
+def main():
+    deploy()
