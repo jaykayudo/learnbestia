@@ -12,6 +12,6 @@ contract TestToken is ERC20, AccessControl{
 
     constructor()ERC20("LearnBestia Token", "LERB"){
         _grantRole(ADMIN_ROLE, msg.sender);
-        _mint(msg.sender, 200000000e18);
+        _mint(msg.sender, 2e30);
     }
 }
