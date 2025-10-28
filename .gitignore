@@ -49,7 +49,6 @@ coverage.xml
 
 # Python env files
 .env
-.env.*
 
 # ---------- Node / React ----------
 # dependencies
@@ -118,7 +117,6 @@ hh-local-*
 # ---------- Misc / project files ----------
 # dotenv + secrets (already covered but ensure)
 *.env
-.env.*
 
 # lockfiles should be tracked; do not ignore package-lock.json / yarn.lock / pnpm-lock.yaml
 
