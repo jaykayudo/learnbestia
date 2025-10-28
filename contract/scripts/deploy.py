@@ -1,5 +1,5 @@
 from brownie import Payment, Certificate, Learnbestia
-from scripts.helpers import get_account
+from scripts.helpers import get_account, generate_contract_data
 
 # ANSI color codes
 GREEN = "\033[92m"
@@ -34,11 +34,15 @@ def deploy():
         f"{GREEN}Deployed Learnbestia Token Contract at {learnbestia_token_contract.address}{RESET}"
     )
 
-    return {
+    data = {
         "certificate": certificate_contract,
         "learnbestia": learnbestia_token_contract,
         "payment": payment_contract,
     }
+
+    # print(generate_contract_data(data))
+
+    return data
 
 
 def main():

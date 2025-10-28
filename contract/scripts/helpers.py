@@ -1,3 +1,5 @@
+import json
+
 from brownie import network, accounts, config
 from brownie.network.account import Account
 
@@ -13,3 +15,19 @@ def get_account(env_account=True) -> Account:
         else:
             account = accounts.load("mainaddress")
     return account
+
+
+def generate_contract_data(data: dict, json_file_path: str = None) -> dict:
+    result = {}
+    for name, contract in data.items():
+        info = {"address": contract.address, "abi": contract.abi}
+        result[name] = info
+
+    if json_file_path:
+        assert json_file_path.endswith(
+            ".json"
+        ), "Invalid file path provided (should end with .json)"
+        json.dump(result, open(json_file_path, "w"))
+        print(f"Contract data saved at {json_file_path}")
+
+    return result
