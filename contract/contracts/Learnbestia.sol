@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
 
-contract TestToken is ERC20, AccessControl{
+contract Learnbestia is ERC20, AccessControl{
     // Define the admin role constant
     bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
 
