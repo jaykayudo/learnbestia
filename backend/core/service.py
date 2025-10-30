@@ -5,6 +5,7 @@ from models import user as user_models
 from rest_framework.exceptions import ValidationError
 
 from . import exceptions
+from core import payment
 
 
 class DashboardService:
@@ -83,10 +84,35 @@ class CoreService:
             payment_method=payment_method,
             reason=user_models.Transaction.REASONS.ORDER_PAY,
         )
+        # initialize the transaction
+        try:
+            cls.initalize_transaction(tx)
+        except Exception:
+            raise exceptions.TransactionInitializationError
         return order, tx
 
     @classmethod
+    def initalize_transaction(cls, tx: user_models.Transaction):
+        if tx.payment_method in user_models.CRYPTO_PAYMENTS:
+            payment.CryptoPayment.initialize_transaction(tx)
+        elif tx.payment_method == user_models.PaymentMethods.FIAT:
+            payment.FiatPayment.initialize_transaction(tx)
+        elif tx.payment_method == user_models.PaymentMethods.INTERNAL:
+            payment.InternalPayment.initialize_transaction(tx)
+
+    @classmethod
     def verify_transaction(cls, tx: user_models.Transaction):
+        # transaction verification
+        if tx.payment_method in user_models.CRYPTO_PAYMENTS:
+            verified = payment.CryptoPayment.verify_transaction(tx)
+        elif tx.payment_method == user_models.PaymentMethods.FIAT:
+            verified = payment.FiatPayment.verify_transaction(tx)
+        else:
+            verified = payment.InternalPayment.verify_transaction(tx)
+
+        if not verified:
+            raise exceptions.TransactionVerificationFailure
+
         try:
             tx.verify()
         except Exception as err:

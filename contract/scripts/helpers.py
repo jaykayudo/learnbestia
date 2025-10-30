@@ -20,7 +20,11 @@ def get_account(env_account=True) -> Account:
 def generate_contract_data(data: dict, json_file_path: str = None) -> dict:
     result = {}
     for name, contract in data.items():
-        info = {"address": contract.address, "abi": contract.abi}
+        info = {
+            "address": contract.address,
+            "abi": contract.abi,
+            "bytecode": contract.bytecode,
+        }
         result[name] = info
 
     if json_file_path:

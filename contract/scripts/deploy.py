@@ -1,3 +1,4 @@
+from pathlib import Path
 from brownie import Payment, Certificate, Learnbestia
 from scripts.helpers import get_account, generate_contract_data
 
@@ -6,6 +7,11 @@ GREEN = "\033[92m"
 YELLOW = "\033[93m"
 BLUE = "\033[94m"
 RESET = "\033[0m"
+
+
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
+
+BACKEND_CONTRACT_DIR = BASE_DIR / "backend/contracts"
 
 
 def deploy():
@@ -40,7 +46,7 @@ def deploy():
         "payment": payment_contract,
     }
 
-    # print(generate_contract_data(data))
+    generate_contract_data(data, str(BACKEND_CONTRACT_DIR / "data.json"))
 
     return data
 

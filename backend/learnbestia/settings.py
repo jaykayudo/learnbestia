@@ -179,3 +179,19 @@ SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=30),
 }
+
+
+# tokens
+TOKEN_ADDRESSES = {"ERC_USDC": "", "ERC_USDT": "", "DOT": "", "BESTIA": ""}
+
+# blockchain settings
+PRIVATE_KEY = os.environ.get("PRIVATE_KEY")
+ADMIN_ADDRESS = os.environ.get("ADDRESS")
+PROVIDER_URL = os.environ.get("PROVIDER_URL")
+CONTRACT_DIR = BASE_DIR / "contracts"
+
+# token contracts
+ERC_USDT = ""
+ERC_USDC = ""
+DOT = ""
+BESTIA_COIN = ""

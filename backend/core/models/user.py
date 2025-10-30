@@ -60,6 +60,14 @@ class WalletTransactionStatus(models.IntegerChoices):
     FAILED = 2, "Failed"
 
 
+CRYPTO_PAYMENTS = [
+    PaymentMethods.BESTIA_COIN,
+    PaymentMethods.ERC_USDC,
+    PaymentMethods.ERC_USDT,
+    PaymentMethods.DOT,
+]
+
+
 class BaseManager(UserManager):
     use_in_migrations = True
 
@@ -242,12 +250,5 @@ class Transaction(BaseModel):
         super().save(*args, **kwargs)
 
     def verify(self):
+        # validate with the transaction payment service
         self.item.tx_verify()
-
-
-class Notification(BaseNotification):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-
-
-class BulkNotification(BaseNotification):
-    users = models.ManyToManyField(User)
