@@ -1,6 +1,8 @@
 import random
 from typing import Any
 
+import requests
+
 from django.conf import settings
 from django.core.files import File
 from django.core.files.storage import default_storage
@@ -9,6 +11,18 @@ from django.template.defaultfilters import slugify
 from django.utils import timezone
 from rest_framework import pagination
 from rest_framework.response import Response
+
+
+TOKEN_DECIMAL = {
+    settings.ERC_USDT: 6,
+    settings.ERC_USDC: 6,
+    settings.BESTIA_COIN: 6,
+    settings.DOT: 12,
+}
+PRICE_API_INFO = {
+    settings.DOT: "https://api.coingecko.com/api/v3/simple/price?ids=polkadot&vs_currencies=usd",
+}
+TOKEN_TO_ID = {settings.DOT: "polkadot"}
 
 
 class CorePagination(pagination.PageNumberPagination):
@@ -120,3 +134,19 @@ def move_course_file(instance, file_path, type="video"):
 
 def get_course_channel_name(id: str):
     return "course_%s" % id
+
+
+def fetch_usd_price(token: str) -> float:
+    if token in PRICE_API_INFO:
+        req = requests.get(PRICE_API_INFO[token])
+        response = req.json()
+        token_name = TOKEN_TO_ID[token]
+        return float(response[token_name]["usd"])
+    return float(1)
+
+
+def get_usd_to_token_equivalent(token: str, usd_amount: float) -> int:
+    price = fetch_usd_price(token)
+    token_amount = usd_amount / price
+    token_amount_in_lowest_decimal = pow(token_amount, TOKEN_DECIMAL[token])
+    return token_amount_in_lowest_decimal

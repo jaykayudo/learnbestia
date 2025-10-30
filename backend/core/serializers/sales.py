@@ -103,6 +103,7 @@ class CreateOrderSerializer(serializers.Serializer):
                 )
         return attrs
 
+    @db_transaction.atomic
     def save(self):
         order, tx = CoreService.create_order(
             self.context["user"], self.validated_data["payment_method"]
