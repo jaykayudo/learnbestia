@@ -81,6 +81,9 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "learnbestia.wsgi.application"
 
+# Channels
+ASGI_APPLICATION = "learnbestia.asgi.application"
+
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
