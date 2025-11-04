@@ -2,9 +2,13 @@ import random
 from typing import Any
 
 import requests
+import base64
+import uuid
+
 
 from django.conf import settings
 from django.core.files import File
+from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.template.defaultfilters import slugify
@@ -150,3 +154,39 @@ def get_usd_to_token_equivalent(token: str, usd_amount: float) -> int:
     token_amount = usd_amount / price
     token_amount_in_lowest_decimal = pow(token_amount, TOKEN_DECIMAL[token])
     return token_amount_in_lowest_decimal
+
+
+def base64_to_file(base64_string, filename_prefix="uploaded_file", file_extension=None):
+    """
+    Convert a Base64 string into a Django ContentFile for saving in a model.
+
+    Args:
+        base64_string (str): The Base64-encoded file data (optionally with metadata).
+        filename_prefix (str): Prefix for the generated filename.
+
+    Returns:
+        ContentFile: A file-like object ready to be saved to a Django model.
+    """
+    # Handle data URLs (e.g., "data:image/png;base64,...")
+    if ";base64," in base64_string:
+        header, base64_data = base64_string.split(";base64,")
+        # Try to extract file extension
+        file_ext = header.split("/")[-1]
+    else:
+        base64_data = base64_string
+        file_ext = "bin"
+
+    if file_extension:
+        file_ext = file_extension
+
+    # Decode the Base64 string
+    try:
+        decoded_file = base64.b64decode(base64_data)
+    except Exception as e:
+        raise ValueError("Invalid base64 data") from e
+
+    # Generate a unique filename
+    filename = f"{filename_prefix}_{uuid.uuid4().hex[:10]}.{file_ext}"
+
+    # Return a Django ContentFile (ready to assign to a model field)
+    return ContentFile(decoded_file, name=filename)

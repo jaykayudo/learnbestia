@@ -319,10 +319,19 @@ class CourseMessage(BaseModel):
 class MessageText(BaseModel):
     content = models.TextField()
 
+    def json_data(self):
+        return {"content": self.content}
+
 
 class MessageAudio(BaseModel):
     file = models.FileField(upload_to="chat_audios")
 
+    def json_data(self):
+        return {"file": self.file.path}
+
 
 class MessageImage(BaseModel):
     file = models.FileField(upload_to="chat_images")
+
+    def json_data(self):
+        return {"file": self.file.path}
