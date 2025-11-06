@@ -11,16 +11,24 @@ class IsActiveUser(BasePermission):
         return bool(request.user and request.user.is_authenticated)
 
 
-class IsCourseStudent(BasePermission):
-    def has_object_permission(self, request, view, obj):
+class IsInstructor(BasePermission):
+    def has_permission(self, request, view):
         if not (is_active_user := IsActiveUser().has_permission(request, view)):
             return is_active_user
         user = request.user
-        flag = obj.students.filter(user=user).exists()
-        return flag
+        return Instructor.objects.filter(user=user).exists()
 
 
-class CourseStudentPermissionMixin:
+class IsCourseInstructor(BasePermission):
+    def has_object_permission(self, request, view, obj):
+        if not (is_instructor := IsInstructor().has_permission(request, view)):
+            return is_instructor
+        instructor = Instructor.objects.get(user=request.user)
+
+        return obj.instructor == instructor
+
+
+class CourseInstructorPermissionMixin:
     def get_course(self):
         if not (course := self.kwargs.get("course")):
             raise exceptions.ActionNotAllowed
@@ -31,7 +39,7 @@ class CourseStudentPermissionMixin:
 
     def check_course_permissions(self, request):
         self.course = self.get_course()
-        permission = IsCourseStudent()
+        permission = IsCourseInstructor()
         if not permission.has_object_permission(request, self, self.course):
             raise self.permission_denied(
                 request,
