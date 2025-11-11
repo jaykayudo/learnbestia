@@ -54,10 +54,28 @@ class PaymentMethods(models.TextChoices):
     INTERNAL = "internal", "Internal"
 
 
+class Coins(models.TextChoices):
+    BESTIA_COIN = "bestia_coin", "Bestia Coin"
+    ERC_USDT = "erc_usdt", "ERC USDT"
+    ERC_USDC = "erc_usdc", "ERC USDC"
+    DOT = "dot", "DOT"
+
+
 class WalletTransactionStatus(models.IntegerChoices):
     PENDING = 0, "Pending"
     SUCCESS = 1, "Success"
     FAILED = 2, "Failed"
+
+
+class WithdrawalRequestStatus(models.IntegerChoices):
+    PENDING = 0, "Pending"
+    APPROVED = 1, "Approved"
+    REJECTED = 2, "Rejected"
+
+
+class WithdrawalPaymentType(models.TextChoices):
+    CRYPTO = "crypto", "Crypto"
+    FIAT = "fiat", "Fiat"
 
 
 CRYPTO_PAYMENTS = [
@@ -252,3 +270,40 @@ class Transaction(BaseModel):
     def verify(self):
         # validate with the transaction payment service
         self.item.tx_verify()
+
+
+class WithdrawalRequest(BaseModel):
+    instructor = models.ForeignKey(Instructor, on_delete=models.CASCADE)
+    amount = models.DecimalField(max_digits=12, decimal_places=2)
+    is_processed = models.BooleanField(default=False)
+    payment_type = models.CharField(
+        max_length=20, choices=WithdrawalPaymentType.choices
+    )
+    status = models.IntegerField(
+        choices=WithdrawalRequestStatus.choices,
+        default=WithdrawalRequestStatus.PENDING,
+    )
+    info_id = models.UUIDField()
+    info_ct = models.ForeignKey(
+        ContentType,
+        on_delete=models.CASCADE,
+        limit_choices_to={"model__in": ["cryptowithdrawalinfo", "fiatwithdrawalinfo"]},
+    )
+    info = GenericForeignKey("info_ct", "info_id")
+
+    def __str__(self):
+        return (
+            f"Withdrawal Request by"
+            f"{self.instructor.user.get_full_name()} - {self.amount}"
+        )
+
+
+class CryptoWithdrawalInfo(BaseModel):
+    coin_type = models.CharField(choices=Coins.choices, max_length=20)
+    wallet_address = models.TextField()
+
+
+class FiatWithdrawalInfo(BaseModel):
+    bank_name = models.CharField(max_length=120)
+    account_number = models.CharField(max_length=50)
+    account_name = models.CharField(max_length=120)
